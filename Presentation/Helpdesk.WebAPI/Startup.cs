@@ -1,17 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using Helpdesk.WebAPI.Common;
+using Helpdesk.WebAPI.Docs;
+using Helpdesk.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
-namespace Application
+namespace Helpdesk.WebAPI
 {
     public class Startup
     {
@@ -26,6 +30,58 @@ namespace Application
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddMvc()
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    });
+
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(new DateTime(2020, 5, 17), 1, 0);
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new HeaderApiVersionReader(ApiConfig.VersionHeader);
+            });
+
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy(ApiConfig.CorsPolicy, policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
+            // Context accessor
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            #region Swagger
+
+            services.AddSwaggerGen(options =>
+            {
+                var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+                var description = GetType().Assembly.ReadEmbeddedResource($"{assemblyName}.Redoc.Description.md");
+
+                options.SwaggerDoc("v1.0", new OpenApiInfo
+                {
+                    Version = "v1.0",
+                    Title = "Helpdesk Application API",
+                    Description = description,
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Robert Breedt",
+                        Email = "robbiebreedt@yahoo.com"
+                    }
+                });
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"Properties/{assemblyName}.xml"));
+                options.DocumentFilter<TagDescriptionDocumentFilter>();
+            });
+
+            #endregion Swagger
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,11 +92,23 @@ namespace Application
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseReDoc(options =>
+            {
+                options.RoutePrefix = "docs";
+                options.SpecUrl = "/swagger/v1.0/swagger.json";
+                options.DocumentTitle = "Helpdesk Application API";
+                options.ExpandResponses(string.Empty);
+            });
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
+
+            app.UseCors(ApiConfig.CorsPolicy);
 
             app.UseEndpoints(endpoints =>
             {
