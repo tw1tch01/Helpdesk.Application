@@ -2,6 +2,10 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Data.Common;
+using Helpdesk.Persistence.Common.Actions;
+using Helpdesk.Persistence.MySql.Extensions;
+using Helpdesk.Persistence.MySql.Options;
 using Helpdesk.WebAPI.Common;
 using Helpdesk.WebAPI.Docs;
 using Helpdesk.WebAPI.Extensions;
@@ -10,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +34,8 @@ namespace Helpdesk.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AddDataService(services);
+
             services.AddControllers();
 
             services.AddMvc()
@@ -92,7 +99,7 @@ namespace Helpdesk.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseSwagger();
 
@@ -106,13 +113,59 @@ namespace Helpdesk.WebAPI
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseCors(ApiConfig.CorsPolicy);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void AddDataService(IServiceCollection services)
+        {
+            services.AddScoped(provider =>
+            {
+                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                return new AddedStateAction
+                {
+                    //CreatedBy = GetUser(httpContext),
+                    //CreatedProcess = GetPath(httpContext)
+                };
+            });
+
+            services.AddScoped(provider =>
+            {
+                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                return new ModifiedStateAction
+                {
+                    //ModifiedBy = GetUser(httpContext),
+                    //ModifiedProcess = GetPath(httpContext)
+                };
+            });
+
+            services.AddScoped(provider =>
+            {
+                var addedContext = provider.GetService<AddedStateAction>();
+                var modifiedContext = provider.GetService<ModifiedStateAction>();
+                var contextScope = new ContextScope();
+                contextScope.StateActions[EntityState.Added] = addedContext.SetCreatedAuditFields;
+                contextScope.StateActions[EntityState.Modified] = modifiedContext.SetModifiedAuditFields;
+
+                return contextScope;
+            });
+
+            var mySqlOptions = new MySqlOptions();
+            Configuration.GetSection(MySqlConfig.SectionName).Bind(mySqlOptions);
+
+            services.AddMySqlPersistence(options =>
+            {
+                options.Server = mySqlOptions.Server;
+                options.Database = mySqlOptions.Database;
+                options.Username = mySqlOptions.Username;
+                options.Password = mySqlOptions.Password;
+                options.Version = mySqlOptions.Version;
             });
         }
     }
