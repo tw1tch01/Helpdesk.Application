@@ -16,12 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="Handlers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.4.1" />
@@ -29,6 +28,12 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Redoc\Description.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Application\Application.csproj" />
+    <ProjectReference Include="..\..\Libraries\Persistence.Common\Persistence.Common.csproj" />
+    <ProjectReference Include="..\..\Libraries\Persistence.MySql\Persistence.MySql.csproj" />
   </ItemGroup>
 
   <ItemGroup>

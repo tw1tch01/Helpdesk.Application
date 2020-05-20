@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Helpdesk.Application</AssemblyName>
+    <RootNamespace>Helpdesk.Application</RootNamespace>
+    <Authors>Robert Breedt</Authors>
+    <Company>Robert Breedt</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Helpdesk.Services" Version="1.0.4" />
+  </ItemGroup>
+
+</Project>

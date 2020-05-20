@@ -9,5 +9,7 @@
         public const string PageSizeHeader = "x-page-size";
 
         public const string CorsPolicy = "default";
+
+        public const string CurrentVersion = "1.0";
     }
 }

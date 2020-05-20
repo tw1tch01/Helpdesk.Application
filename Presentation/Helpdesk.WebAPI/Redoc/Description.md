@@ -32,9 +32,9 @@ Pagination is handled by sending through the following headers in the request,
 
 
 | Request Header | Description | DataType |
-|--------|-------------|------|
-| `X-Page-Number` | The page number you wish to view. **NOTE**: First page will always start at `0` | `int` |
-| `X-Page-Size` | The number of records you would like returned for each page. | `int` |
+|----------------|-------------|----------|
+| `x-page-number` | The page number you wish to view. **NOTE**: First page will always start at `0` | `int` |
+| `x-page-size` | The number of records you would like returned for each page. | `int` |
 
 If you request a pagination endpoint and do not supply the above headers, the request will set these values to their corresponding default values. Each resource has its own default and maximum page sizes. If a page size greater than the maximum page size is request, the system will set it to its maximum value.
 For none paged requests, use the defined `{resource}/all` endpoint.
@@ -46,3 +46,17 @@ This API features Cross-Origin Resource Sharing (CORS) implemented in compliance
 ## Authentication
 
 There is currently no authentication setup for this implementation of the `Helpdesk.Core` system. Will be implemented when Clients/Users are setup.
+
+## API Versioning
+
+This API supports API versioning via request headers.
+
+| Request Header | Description | DataType |
+|----------------|-------------|----------|
+| `x-api-version` | string value for the API version | `string` |
+
+Current status of API endpoints
+
+| Version | Status |
+|--------|----------------|
+| `1.0` | Curent version |

@@ -2,14 +2,21 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Data.Common;
+using Helpdesk.Application.Extensions;
+using Helpdesk.Persistence.Common.Actions;
+using Helpdesk.Persistence.MySql.Extensions;
+using Helpdesk.Persistence.MySql.Options;
 using Helpdesk.WebAPI.Common;
 using Helpdesk.WebAPI.Docs;
 using Helpdesk.WebAPI.Extensions;
+using Helpdesk.WebAPI.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,6 +36,8 @@ namespace Helpdesk.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AddDataService(services);
+            services.AddApplication();
             services.AddControllers();
 
             services.AddMvc()
@@ -40,7 +49,8 @@ namespace Helpdesk.WebAPI
             services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
-                options.DefaultApiVersion = new ApiVersion(new DateTime(2020, 5, 17), 1, 0);
+                options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
+                options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.ReportApiVersions = true;
                 options.ApiVersionReader = new HeaderApiVersionReader(ApiConfig.VersionHeader);
             });
@@ -66,9 +76,9 @@ namespace Helpdesk.WebAPI
                 var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
                 var description = GetType().Assembly.ReadEmbeddedResource($"{assemblyName}.Redoc.Description.md");
 
-                options.SwaggerDoc("v1.0", new OpenApiInfo
+                options.SwaggerDoc($"v{ApiConfig.CurrentVersion}", new OpenApiInfo
                 {
-                    Version = "v1.0",
+                    Version = $"v{ApiConfig.CurrentVersion}",
                     Title = "Helpdesk Application API",
                     Description = description,
                     Contact = new OpenApiContact
@@ -92,27 +102,90 @@ namespace Helpdesk.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
+
+            app.UseExceptionHandler(a => a.Run(async context =>
+            {
+                await ExceptionHandler.Handle(context);
+            }));
 
             app.UseSwagger();
 
             app.UseReDoc(options =>
             {
                 options.RoutePrefix = "docs";
-                options.SpecUrl = "/swagger/v1.0/swagger.json";
+                options.SpecUrl = $"/swagger/v{ApiConfig.CurrentVersion}/swagger.json";
                 options.DocumentTitle = "Helpdesk Application API";
                 options.ExpandResponses(string.Empty);
             });
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseCors(ApiConfig.CorsPolicy);
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private static string GetUser(HttpContext httpContext)
+        {
+            return httpContext?.User?.Identity?.Name ?? "system";
+        }
+
+        private static string GetPath(HttpContext httpContext)
+        {
+            var request = httpContext?.Request;
+
+            return request == null ? "/no-context" : $"{request.Path} [{request.Method}]";
+        }
+
+        private void AddDataService(IServiceCollection services)
+        {
+            services.AddScoped(provider =>
+            {
+                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                return new AddedStateAction
+                {
+                    CreatedBy = GetUser(httpContext),
+                    CreatedProcess = GetPath(httpContext)
+                };
+            });
+
+            services.AddScoped(provider =>
+            {
+                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                return new ModifiedStateAction
+                {
+                    ModifiedBy = GetUser(httpContext),
+                    ModifiedProcess = GetPath(httpContext)
+                };
+            });
+
+            services.AddScoped(provider =>
+            {
+                var addedContext = provider.GetService<AddedStateAction>();
+                var modifiedContext = provider.GetService<ModifiedStateAction>();
+                var contextScope = new ContextScope();
+                contextScope.StateActions[EntityState.Added] = addedContext.SetCreatedAuditFields;
+                contextScope.StateActions[EntityState.Modified] = modifiedContext.SetModifiedAuditFields;
+
+                return contextScope;
+            });
+
+            var mySqlOptions = new MySqlOptions();
+            Configuration.GetSection(MySqlConfig.SectionName).Bind(mySqlOptions);
+
+            services.AddMySqlPersistence(options =>
+            {
+                options.Server = mySqlOptions.Server;
+                options.Database = mySqlOptions.Database;
+                options.Username = mySqlOptions.Username;
+                options.Password = mySqlOptions.Password;
+                options.Version = mySqlOptions.Version;
             });
         }
     }

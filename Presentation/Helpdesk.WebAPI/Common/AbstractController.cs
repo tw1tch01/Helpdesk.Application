@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Helpdesk.WebAPI.Common
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[area]")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(ApiErrorResponse), (int)HttpStatusCode.InternalServerError)]
     public abstract class AbstractController : Controller
