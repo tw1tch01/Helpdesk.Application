@@ -4,5 +4,102 @@
         <name>Helpdesk.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.CloseTicket(System.Int32)">
+            <summary>
+            Close a ticket
+            </summary>
+            <remarks>
+            Close a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket.</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully closed.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.PauseTicket(System.Int32)">
+            <summary>
+            Pause a ticket
+            </summary>
+            <remarks>
+            Pause a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket.</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully paused.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.ReopenTicket(System.Int32)">
+            <summary>
+            Reopen a ticket
+            </summary>
+            <remarks>
+            Reopen a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket.</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully reopend.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.ResolveTicket(System.Int32)">
+            <summary>
+            Resolve a ticket
+            </summary>
+            <remarks>
+            Resolve a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket.</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully resolved.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.StartTicket(System.Int32)">
+            <summary>
+            Start a ticket
+            </summary>
+            <remarks>
+            Start a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket.</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully startd.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketsController.OpenTicket(Helpdesk.DomainModels.Tickets.NewTicket)">
+            <summary>
+            Open a ticket
+            </summary>
+            <remarks>
+            Open a new Ticket
+            </remarks>
+            <param name="newTicket">Details of the new ticket.</param>
+            <returns>Action result</returns>
+            <response code="201">Ticket was succesfully opened.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketsController.DeleteTicket(System.Int32)">
+            <summary>
+            Delete a ticket
+            </summary>
+            <remarks>
+            Delete a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully deleted.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketsController.UpdateTicket(System.Int32,Helpdesk.DomainModels.Tickets.UpdateTicketDto)">
+            <summary>
+            Update a ticket
+            </summary>
+            <remarks>
+            Update a Ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket</param>
+            <param name="updateTicket">Updated details for the ticket</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully updated.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
     </members>
 </doc>

@@ -73,9 +73,9 @@ namespace Helpdesk.WebAPI
                 var assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
                 var description = GetType().Assembly.ReadEmbeddedResource($"{assemblyName}.Redoc.Description.md");
 
-                options.SwaggerDoc("v1.0", new OpenApiInfo
+                options.SwaggerDoc($"v{ApiConfig.CurrentVersion}", new OpenApiInfo
                 {
-                    Version = "v1.0",
+                    Version = $"v{ApiConfig.CurrentVersion}",
                     Title = "Helpdesk Application API",
                     Description = description,
                     Contact = new OpenApiContact
@@ -106,7 +106,7 @@ namespace Helpdesk.WebAPI
             app.UseReDoc(options =>
             {
                 options.RoutePrefix = "docs";
-                options.SpecUrl = "/swagger/v1.0/swagger.json";
+                options.SpecUrl = $"/swagger/v{ApiConfig.CurrentVersion}/swagger.json";
                 options.DocumentTitle = "Helpdesk Application API";
                 options.ExpandResponses(string.Empty);
             });

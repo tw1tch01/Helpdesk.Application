@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\" />
     <Folder Include="Handlers\" />
   </ItemGroup>
 
@@ -36,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Application\Application.csproj" />
     <ProjectReference Include="..\..\Libraries\Persistence.Common\Persistence.Common.csproj" />
     <ProjectReference Include="..\..\Libraries\Persistence.MySql\Persistence.MySql.csproj" />
   </ItemGroup>
