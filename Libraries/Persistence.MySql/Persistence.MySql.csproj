@@ -9,15 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\Tickets\**" />
+    <EmbeddedResource Remove="Migrations\Tickets\**" />
+    <None Remove="Migrations\Tickets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Persistence.Common\Persistence.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\Tickets\" />
   </ItemGroup>
 
 </Project>

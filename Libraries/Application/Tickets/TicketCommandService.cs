@@ -25,7 +25,7 @@ namespace Helpdesk.Application.Tickets
 
         public Task<OpenTicketResult> Open(NewTicket newTicket) => _openTicketService.Open(newTicket);
 
-        public Task<DeleteTicketResult> Delete(int ticketId) => _deleteTicketService.Delete(ticketId, 0);
+        public Task<DeleteTicketResult> Delete(int ticketId, int userId) => _deleteTicketService.Delete(ticketId, userId);
 
         public Task<UpdateTicketResult> Update(int ticketId, UpdateTicketDto updateTicket) => _updateTicketService.Update(ticketId, updateTicket);
     }

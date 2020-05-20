@@ -19,7 +19,7 @@ namespace Helpdesk.Persistence.SqlServer.Extensions
             services.AddDbContext<TicketContext>(opt => opt
                 .UseSqlServer(options.ConnectionString, contextOptions =>
                 {
-                    contextOptions.MigrationsAssembly("Helpdesk.Persistence.Common");
+                    contextOptions.MigrationsAssembly("Helpdesk.Persistence.SqlServer");
                 }), ServiceLifetime.Transient);
 
             return services;

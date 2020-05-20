@@ -59,7 +59,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(DeleteTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteTicket([FromRoute]int ticketId)
         {
-            var result = await _commandService.Delete(ticketId);
+            var result = await _commandService.Delete(ticketId, 0);
 
             return result.Result switch
             {
