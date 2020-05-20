@@ -8,7 +8,7 @@ using Helpdesk.Services.Tickets.Results;
 
 namespace Helpdesk.Application.Tickets
 {
-    public class TicketActionsService
+    public class TicketActionService
     {
         private readonly ICloseTicketService _closeTicketService;
         private readonly IPauseTicketService _pauseTicketService;
@@ -16,7 +16,7 @@ namespace Helpdesk.Application.Tickets
         private readonly IResolveTicketService _resolveTicketService;
         private readonly IStartTicketService _startTicketService;
 
-        public TicketActionsService(
+        public TicketActionService(
             ICloseTicketService closeTicketService,
             IPauseTicketService pauseTicketService,
             IReopenTicketService reopenTicketService,

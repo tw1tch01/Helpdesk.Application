@@ -12,11 +12,11 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
     [ApiVersion(ApiConfig.CurrentVersion)]
     public class TicketActionsController : AbstractController
     {
-        private readonly TicketActionsService _service;
+        private readonly TicketActionService _actionService;
 
-        public TicketActionsController(TicketActionsService service)
+        public TicketActionsController(TicketActionService actionService)
         {
-            _service = service;
+            _actionService = actionService;
         }
 
         /// <summary>
@@ -29,12 +29,12 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         /// <returns>Action result</returns>
         /// <response code="200">Ticket was succesfully closed.</response>
         /// <response code="400">Request was not valid.</response>
-        [HttpPost("/close/{ticketId:int}")]
+        [HttpPost("close/{ticketId:int}")]
         [ProducesResponseType(typeof(CloseTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(CloseTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CloseTicket([FromRoute] int ticketId)
         {
-            var result = await _service.CloseTicket(ticketId, 0);
+            var result = await _actionService.CloseTicket(ticketId, 0);
 
             return result.Result switch
             {
@@ -53,12 +53,12 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         /// <returns>Action result</returns>
         /// <response code="200">Ticket was succesfully paused.</response>
         /// <response code="400">Request was not valid.</response>
-        [HttpPost("/pause/{ticketId:int}")]
+        [HttpPost("pause/{ticketId:int}")]
         [ProducesResponseType(typeof(PauseTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(PauseTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> PauseTicket([FromRoute] int ticketId)
         {
-            var result = await _service.PauseTicket(ticketId, 0);
+            var result = await _actionService.PauseTicket(ticketId, 0);
 
             return result.Result switch
             {
@@ -77,12 +77,12 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         /// <returns>Action result</returns>
         /// <response code="200">Ticket was succesfully reopend.</response>
         /// <response code="400">Request was not valid.</response>
-        [HttpPost("/reopen/{ticketId:int}")]
+        [HttpPost("reopen/{ticketId:int}")]
         [ProducesResponseType(typeof(ReopenTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ReopenTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ReopenTicket([FromRoute] int ticketId)
         {
-            var result = await _service.ReopenTicket(ticketId, 0);
+            var result = await _actionService.ReopenTicket(ticketId, 0);
 
             return result.Result switch
             {
@@ -101,12 +101,12 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         /// <returns>Action result</returns>
         /// <response code="200">Ticket was succesfully resolved.</response>
         /// <response code="400">Request was not valid.</response>
-        [HttpPost("/resolve/{ticketId:int}")]
+        [HttpPost("resolve/{ticketId:int}")]
         [ProducesResponseType(typeof(ResolveTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ResolveTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ResolveTicket([FromRoute] int ticketId)
         {
-            var result = await _service.ResolveTicket(ticketId, 0);
+            var result = await _actionService.ResolveTicket(ticketId, 0);
 
             return result.Result switch
             {
@@ -125,12 +125,12 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         /// <returns>Action result</returns>
         /// <response code="200">Ticket was succesfully startd.</response>
         /// <response code="400">Request was not valid.</response>
-        [HttpPost("/start/{ticketId:int}")]
+        [HttpPost("start/{ticketId:int}")]
         [ProducesResponseType(typeof(StartTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(StartTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> StartTicket([FromRoute] int ticketId)
         {
-            var result = await _service.StartTicket(ticketId, 0);
+            var result = await _actionService.StartTicket(ticketId, 0);
 
             return result.Result switch
             {

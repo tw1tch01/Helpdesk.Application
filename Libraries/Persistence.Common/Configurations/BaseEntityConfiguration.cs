@@ -1,6 +1,8 @@
-﻿using Helpdesk.Domain.Common;
+﻿using System;
+using Helpdesk.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Helpdesk.Persistence.Common.Configurations
 {
@@ -20,6 +22,10 @@ namespace Helpdesk.Persistence.Common.Configurations
 
             builder.Property(entity => entity.ModifiedProcess)
                    .HasMaxLength(1024);
+
+            builder.Property(entity => entity.Identifier)
+                   .IsRequired()
+                   .HasValueGenerator(typeof(GuidValueGenerator));
         }
     }
 }

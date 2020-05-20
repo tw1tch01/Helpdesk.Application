@@ -14,7 +14,7 @@ namespace Helpdesk.Persistence.Common.Actions
         public void SetCreatedAuditFields(EntityEntry entity)
         {
             entity.Entity.TrySetProperty(nameof(ICreatedAudit.CreatedBy), CreatedBy);
-            entity.Entity.TrySetProperty(nameof(ICreatedAudit.CreatedOn), DateTime.UtcNow);
+            entity.Entity.TrySetProperty(nameof(ICreatedAudit.CreatedOn), DateTimeOffset.UtcNow);
             entity.Entity.TrySetProperty(nameof(ICreatedAudit.CreatedProcess), CreatedProcess);
         }
     }

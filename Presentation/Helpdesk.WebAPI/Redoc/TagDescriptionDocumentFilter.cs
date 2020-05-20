@@ -11,7 +11,7 @@ namespace Helpdesk.WebAPI.Docs
         {
             swaggerDoc.Tags = new List<OpenApiTag>
             {
-                new OpenApiTag { Name = AreaNames.Tickets, Description = "Resource endpoints for managing all the Tickets." }
+                new OpenApiTag { Name = AreaNames.Tickets, Description = "Resource endpoints for managing Tickets." }
             };
         }
     }

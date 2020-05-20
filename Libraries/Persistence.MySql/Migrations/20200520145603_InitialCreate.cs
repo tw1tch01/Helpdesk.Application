@@ -1,7 +1,8 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Helpdesk.Persistence.Common.Migrations
+namespace Helpdesk.Persistence.MySql.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -11,11 +12,12 @@ namespace Helpdesk.Persistence.Common.Migrations
                 name: "Tickets",
                 columns: table => new
                 {
-                    TicketId = table.Column<int>(nullable: false),
-                    CreatedBy = table.Column<int>(nullable: false),
+                    TicketId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CreatedBy = table.Column<string>(nullable: false),
                     CreatedOn = table.Column<DateTimeOffset>(nullable: false),
                     CreatedProcess = table.Column<string>(maxLength: 1024, nullable: false),
-                    ModifiedBy = table.Column<int>(nullable: true),
+                    ModifiedBy = table.Column<string>(nullable: true),
                     ModifiedOn = table.Column<DateTimeOffset>(nullable: true),
                     ModifiedProcess = table.Column<string>(maxLength: 1024, nullable: true),
                     Identifier = table.Column<Guid>(nullable: false),

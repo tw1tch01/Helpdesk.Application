@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Helpdesk.Persistence.Common.Migrations
+namespace Helpdesk.Persistence.MySql.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20200518034555_InitialCreate")]
+    [Migration("20200520145603_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,8 +34,9 @@ namespace Helpdesk.Persistence.Common.Migrations
                     b.Property<DateTimeOffset?>("ClosedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("datetime(6)");
@@ -55,8 +56,8 @@ namespace Helpdesk.Persistence.Common.Migrations
                     b.Property<Guid>("Identifier")
                         .HasColumnType("char(36)");
 
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTimeOffset?>("ModifiedOn")
                         .HasColumnType("datetime(6)");

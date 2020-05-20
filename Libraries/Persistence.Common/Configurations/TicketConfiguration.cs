@@ -1,4 +1,6 @@
-﻿using Helpdesk.Domain.Entities;
+﻿using System;
+using Helpdesk.Domain.Entities;
+using Helpdesk.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Helpdesk.Persistence.Common.Configurations
@@ -35,10 +37,12 @@ namespace Helpdesk.Persistence.Common.Configurations
                    .IsRequired();
 
             builder.Property(ticket => ticket.Severity)
-                   .IsRequired();
+                   .IsRequired()
+                   .HasConversion(severity => severity.ToString(), severityString => (Severity)Enum.Parse(typeof(Severity), severityString));
 
             builder.Property(ticket => ticket.Priority)
-                   .IsRequired();
+                   .IsRequired()
+                   .HasConversion(priority => priority.ToString(), priorityString => (Priority)Enum.Parse(typeof(Priority), priorityString));
 
             #endregion Properties
 

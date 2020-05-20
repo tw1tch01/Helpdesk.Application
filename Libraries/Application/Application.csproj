@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Helpdesk.Services" Version="1.0.1" />
+    <PackageReference Include="Helpdesk.Services" Version="1.0.4" />
   </ItemGroup>
 
 </Project>

@@ -11,17 +11,13 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
 {
     [Area(AreaNames.Tickets)]
     [ApiVersion(ApiConfig.CurrentVersion)]
-    public class TicketsController : AbstractController
+    public class TicketCommandsController : AbstractController
     {
-        private readonly TicketManagementService _managementService;
-        private readonly TicketQueryService _queryService;
+        private readonly TicketCommandService _commandService;
 
-        public TicketsController(
-            TicketManagementService managementService,
-            TicketQueryService queryService)
+        public TicketCommandsController(TicketCommandService commandService)
         {
-            _managementService = managementService;
-            _queryService = queryService;
+            _commandService = commandService;
         }
 
         /// <summary>
@@ -39,31 +35,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(OpenTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> OpenTicket([FromBody] NewTicket newTicket)
         {
-            var result = await _managementService.Open(newTicket);
-
-            return result.Result switch
-            {
-                TicketOpenResult.Opened => Created($"/tickets/{result.TicketId.Value}", result),
-                _ => BadRequest(result),
-            };
-        }
-        
-        /// <summary>
-        /// Open a ticket
-        /// </summary>
-        /// <remarks>
-        /// Open a new Ticket
-        /// </remarks>
-        /// <param name="newTicket">Details of the new ticket.</param>
-        /// <returns>Action result</returns>
-        /// <response code="201">Ticket was succesfully opened.</response>
-        /// <response code="400">Request was not valid.</response>
-        [HttpPost("open")]
-        [ProducesResponseType(typeof(OpenTicketResult), (int)HttpStatusCode.Created)]
-        [ProducesResponseType(typeof(OpenTicketResult), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> OpenTicket([FromBody] NewTicket newTicket)
-        {
-            var result = await _managementService.Open(newTicket);
+            var result = await _commandService.Open(newTicket);
 
             return result.Result switch
             {
@@ -87,7 +59,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(DeleteTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteTicket([FromRoute]int ticketId)
         {
-            var result = await _managementService.Delete(ticketId);
+            var result = await _commandService.Delete(ticketId);
 
             return result.Result switch
             {
@@ -112,7 +84,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(UpdateTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateTicket([FromRoute]int ticketId, [FromBody] UpdateTicketDto updateTicket)
         {
-            var result = await _managementService.Update(ticketId, updateTicket);
+            var result = await _commandService.Update(ticketId, updateTicket);
 
             return result.Result switch
             {

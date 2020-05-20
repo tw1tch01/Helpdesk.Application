@@ -22,7 +22,7 @@ namespace Helpdesk.Persistence.MySql.Extensions
                 contextOptions =>
                 {
                     contextOptions.ServerVersion(new Version(options.Version.Major, options.Version.Minor, options.Version.Build), ServerType.MySql);
-                    contextOptions.MigrationsAssembly("Helpdesk.Persistence.Common");
+                    contextOptions.MigrationsAssembly("Helpdesk.Persistence.MySql");
                 }), ServiceLifetime.Transient);
 
             return services;

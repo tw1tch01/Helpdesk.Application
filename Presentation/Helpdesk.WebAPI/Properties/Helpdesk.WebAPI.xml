@@ -64,7 +64,7 @@
             <response code="200">Ticket was succesfully startd.</response>
             <response code="400">Request was not valid.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketsController.OpenTicket(Helpdesk.DomainModels.Tickets.NewTicket)">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketCommandsController.OpenTicket(Helpdesk.DomainModels.Tickets.NewTicket)">
             <summary>
             Open a ticket
             </summary>
@@ -76,7 +76,7 @@
             <response code="201">Ticket was succesfully opened.</response>
             <response code="400">Request was not valid.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketsController.DeleteTicket(System.Int32)">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketCommandsController.DeleteTicket(System.Int32)">
             <summary>
             Delete a ticket
             </summary>
@@ -88,7 +88,7 @@
             <response code="200">Ticket was succesfully deleted.</response>
             <response code="400">Request was not valid.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketsController.UpdateTicket(System.Int32,Helpdesk.DomainModels.Tickets.UpdateTicketDto)">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketCommandsController.UpdateTicket(System.Int32,Helpdesk.DomainModels.Tickets.UpdateTicketDto)">
             <summary>
             Update a ticket
             </summary>
@@ -100,6 +100,53 @@
             <returns>Action result</returns>
             <response code="200">Ticket was succesfully updated.</response>
             <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.GetTicket(System.Int32)">
+            <summary>
+            Get a ticket
+            </summary>
+            <remarks>
+            Get the full details for a ticket
+            </remarks>
+            <param name="ticketId">Unique identifier of the ticket</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket details.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.LookupTickets(System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.String,System.Int32[],System.Nullable{Helpdesk.Domain.Enums.TicketStatus},System.Nullable{Helpdesk.Domain.Enums.Severity},System.Nullable{Helpdesk.Domain.Enums.Priority},System.Nullable{Helpdesk.DomainModels.Tickets.Enums.SortTicketsBy})">
+            <summary>
+            Lookup tickets
+            </summary>
+            <remarks>
+            Lookup a set of tickets
+            </remarks>
+            <param name="createdAfter">Filter to tickets created after specified date</param>
+            <param name="createdBefore">Filter to tickets created before specified date</param>
+            <param name="searchyBy">Filter to tickets whose Name contains the specified term</param>
+            <param name="ticketIds">Filter to only the tickets whose TicketId is contained within specified ticketIds</param>
+            <param name="filterByStatus">Filter to tickets whose status match the specified status</param>
+            <param name="filterBySeverity">Filter to tickets whose severity match the specified severity</param>
+            <param name="filterByPriority">Filter to tickets whose priority match the specified priority</param>
+            <param name="sortBy">Sort the tickets by the specified value</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully opened.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.PagedTicketLookup(System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.String,System.Collections.Generic.IList{System.Int32},System.Nullable{Helpdesk.Domain.Enums.TicketStatus},System.Nullable{Helpdesk.Domain.Enums.Severity},System.Nullable{Helpdesk.Domain.Enums.Priority},System.Nullable{Helpdesk.DomainModels.Tickets.Enums.SortTicketsBy})">
+            <summary>
+            Paged tickets lookup
+            </summary>
+            <remarks>
+            Page through a set of tickets
+            </remarks>
+            <param name="createdAfter">Filter to tickets created after specified date</param>
+            <param name="createdBefore">Filter to tickets created before specified date</param>
+            <param name="searchyBy">Filter to tickets whose Name contains the specified term</param>
+            <param name="ticketIds">Filter to only the tickets whose TicketId is contained within specified ticketIds</param>
+            <param name="filterByStatus">Filter to tickets whose status match the specified status</param>
+            <param name="filterBySeverity">Filter to tickets whose severity match the specified severity</param>
+            <param name="filterByPriority">Filter to tickets whose priority match the specified priority</param>
+            <param name="sortBy">Sort the tickets by the specified value</param>
+            <returns>Action result</returns>
+            <response code="200">Ticket was succesfully opened.</response>
         </member>
     </members>
 </doc>

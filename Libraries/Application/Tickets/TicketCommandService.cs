@@ -7,13 +7,13 @@ using Helpdesk.Services.Tickets.Results;
 
 namespace Helpdesk.Application.Tickets
 {
-    public class TicketManagementService
+    public class TicketCommandService
     {
         private readonly IOpenTicketService _openTicketService;
         private readonly IDeleteTicketService _deleteTicketService;
         private readonly IUpdateTicketService _updateTicketService;
 
-        public TicketManagementService(
+        public TicketCommandService(
             IOpenTicketService openTicketService,
             IDeleteTicketService deleteTicketService,
             IUpdateTicketService updateTicketService)

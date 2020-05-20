@@ -24,6 +24,6 @@ namespace Helpdesk.Application.Tickets
 
         public Task<IList<TicketLookup>> LookupTickets(TicketLookupParams @params) => _lookupTicketsService.Lookup(@params);
 
-        public Task<PagedCollection<TicketLookup>> PagedCollection(int page, int pageSize, TicketLookupParams @params) => _lookupTicketsService.PagedLookup(page, pageSize, @params);
+        public Task<PagedCollection<TicketLookup>> PagedTicketLookup(int page, int pageSize, TicketLookupParams @params) => _lookupTicketsService.PagedLookup(page, pageSize, @params);
     }
 }

@@ -14,7 +14,7 @@ namespace Helpdesk.Persistence.Common.Actions
         public void SetModifiedAuditFields(EntityEntry entity)
         {
             entity.Entity.TrySetProperty(nameof(IModifiedAudit.ModifiedBy), ModifiedBy);
-            entity.Entity.TrySetProperty(nameof(IModifiedAudit.ModifiedOn), DateTime.UtcNow);
+            entity.Entity.TrySetProperty(nameof(IModifiedAudit.ModifiedOn), DateTimeOffset.UtcNow);
             entity.Entity.TrySetProperty(nameof(IModifiedAudit.ModifiedProcess), ModifiedProcess);
         }
     }

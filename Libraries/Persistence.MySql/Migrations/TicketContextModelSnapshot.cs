@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Helpdesk.Persistence.Common.Migrations
+namespace Helpdesk.Persistence.MySql.Migrations
 {
     [DbContext(typeof(TicketContext))]
     partial class TicketContextModelSnapshot : ModelSnapshot
@@ -32,8 +32,9 @@ namespace Helpdesk.Persistence.Common.Migrations
                     b.Property<DateTimeOffset?>("ClosedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("CreatedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTimeOffset>("CreatedOn")
                         .HasColumnType("datetime(6)");
@@ -53,8 +54,8 @@ namespace Helpdesk.Persistence.Common.Migrations
                     b.Property<Guid>("Identifier")
                         .HasColumnType("char(36)");
 
-                    b.Property<int?>("ModifiedBy")
-                        .HasColumnType("int");
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTimeOffset?>("ModifiedOn")
                         .HasColumnType("datetime(6)");
@@ -71,8 +72,9 @@ namespace Helpdesk.Persistence.Common.Migrations
                     b.Property<DateTimeOffset?>("PausedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("int");
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
@@ -83,8 +85,9 @@ namespace Helpdesk.Persistence.Common.Migrations
                     b.Property<DateTimeOffset?>("ResolvedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Severity")
-                        .HasColumnType("int");
+                    b.Property<string>("Severity")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<DateTimeOffset?>("StartedOn")
                         .HasColumnType("datetime(6)");
