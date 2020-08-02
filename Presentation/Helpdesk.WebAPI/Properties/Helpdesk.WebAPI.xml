@@ -4,6 +4,28 @@
         <name>Helpdesk.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:Helpdesk.WebAPI.Areas.TicketLinks.Controllers.TicketLinksController.LinkTicket(Helpdesk.DomainModels.TicketLinks.LinkTicket)">
+            <summary>
+            Link tickets
+            </summary>
+            <remarks>
+            Link a ticket to another ticket
+            </remarks>
+            <returns>Action result</returns>
+            <response code="200">Tickets were succesfully linked.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
+        <member name="M:Helpdesk.WebAPI.Areas.TicketLinks.Controllers.TicketLinksController.UnlinkTicket(Helpdesk.DomainModels.TicketLinks.UnlinkTicket)">
+            <summary>
+            Unlink tickets
+            </summary>
+            <remarks>
+            Unlink a ticket from another ticket
+            </remarks>
+            <returns>Action result</returns>
+            <response code="200">Tickets were succesfully unlinked.</response>
+            <response code="400">Request was not valid.</response>
+        </member>
         <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.CloseTicket(System.Int32)">
             <summary>
             Close a ticket
@@ -64,7 +86,7 @@
             <response code="200">Ticket was succesfully startd.</response>
             <response code="400">Request was not valid.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketCommandsController.OpenTicket(Helpdesk.DomainModels.Tickets.NewTicket)">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketManagementController.OpenTicket(Helpdesk.DomainModels.Tickets.NewTicket)">
             <summary>
             Open a ticket
             </summary>
@@ -76,7 +98,7 @@
             <response code="201">Ticket was succesfully opened.</response>
             <response code="400">Request was not valid.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketCommandsController.DeleteTicket(System.Int32)">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketManagementController.DeleteTicket(System.Int32)">
             <summary>
             Delete a ticket
             </summary>
@@ -88,7 +110,7 @@
             <response code="200">Ticket was succesfully deleted.</response>
             <response code="400">Request was not valid.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketCommandsController.UpdateTicket(System.Int32,Helpdesk.DomainModels.Tickets.UpdateTicketDto)">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketManagementController.UpdateTicket(System.Int32,Helpdesk.DomainModels.Tickets.EditTicket)">
             <summary>
             Update a ticket
             </summary>
@@ -112,7 +134,7 @@
             <returns>Action result</returns>
             <response code="200">Ticket details.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.LookupTickets(System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.String,System.Int32[],System.Nullable{Helpdesk.Domain.Enums.TicketStatus},System.Nullable{Helpdesk.Domain.Enums.Severity},System.Nullable{Helpdesk.Domain.Enums.Priority},System.Nullable{Helpdesk.DomainModels.Tickets.Enums.SortTicketsBy})">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.LookupTickets(System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.String,System.String,System.Nullable{Helpdesk.Domain.Tickets.Enums.TicketStatus},System.Nullable{Helpdesk.Domain.Tickets.Enums.Severity},System.Nullable{Helpdesk.Domain.Tickets.Enums.Priority},System.Nullable{Helpdesk.DomainModels.Tickets.Enums.SortTicketsBy})">
             <summary>
             Lookup tickets
             </summary>
@@ -130,7 +152,7 @@
             <returns>Action result</returns>
             <response code="200">Ticket was succesfully opened.</response>
         </member>
-        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.PagedTicketLookup(System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.String,System.Collections.Generic.IList{System.Int32},System.Nullable{Helpdesk.Domain.Enums.TicketStatus},System.Nullable{Helpdesk.Domain.Enums.Severity},System.Nullable{Helpdesk.Domain.Enums.Priority},System.Nullable{Helpdesk.DomainModels.Tickets.Enums.SortTicketsBy})">
+        <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketQueriesController.PagedTicketLookup(System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.String,System.String,System.Nullable{Helpdesk.Domain.Tickets.Enums.TicketStatus},System.Nullable{Helpdesk.Domain.Tickets.Enums.Severity},System.Nullable{Helpdesk.Domain.Tickets.Enums.Priority},System.Nullable{Helpdesk.DomainModels.Tickets.Enums.SortTicketsBy})">
             <summary>
             Paged tickets lookup
             </summary>

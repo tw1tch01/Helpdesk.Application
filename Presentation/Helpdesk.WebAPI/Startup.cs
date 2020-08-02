@@ -4,9 +4,12 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Data.Common;
 using Helpdesk.Application.Extensions;
-using Helpdesk.Persistence.Common.Actions;
-using Helpdesk.Persistence.MySql.Extensions;
-using Helpdesk.Persistence.MySql.Options;
+using Helpdesk.Persistence.Actions;
+using Helpdesk.Persistence.Common.Options;
+using Helpdesk.Persistence.Contexts;
+using Helpdesk.Persistence.Extensions;
+using Helpdesk.Persistence.Options;
+using Helpdesk.Services.Common.Contexts;
 using Helpdesk.WebAPI.Common;
 using Helpdesk.WebAPI.Docs;
 using Helpdesk.WebAPI.Extensions;
@@ -15,6 +18,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -57,7 +61,6 @@ namespace Helpdesk.WebAPI
 
             services.AddCors(options =>
             {
-                // this defines a CORS policy called "default"
                 options.AddPolicy(ApiConfig.CorsPolicy, policy =>
                 {
                     policy.AllowAnyOrigin()
@@ -87,8 +90,25 @@ namespace Helpdesk.WebAPI
                         Email = "robbiebreedt@yahoo.com"
                     }
                 });
+
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"Properties/{assemblyName}.xml"));
                 options.DocumentFilter<TagDescriptionDocumentFilter>();
+
+                options.TagActionsBy(api =>
+                {
+                    if (api.GroupName != null)
+                    {
+                        return new[] { api.GroupName };
+                    }
+
+                    if (api.ActionDescriptor is ControllerActionDescriptor controllerActionDescriptor)
+                    {
+                        return new[] { controllerActionDescriptor.ControllerName };
+                    }
+
+                    throw new InvalidOperationException("Unable to determine tag for endpoint.");
+                });
+                options.DocInclusionPredicate((name, api) => true);
             });
 
             #endregion Swagger
@@ -172,21 +192,14 @@ namespace Helpdesk.WebAPI
                 var contextScope = new ContextScope();
                 contextScope.StateActions[EntityState.Added] = addedContext.SetCreatedAuditFields;
                 contextScope.StateActions[EntityState.Modified] = modifiedContext.SetModifiedAuditFields;
-
                 return contextScope;
             });
 
-            var mySqlOptions = new MySqlOptions();
-            Configuration.GetSection(MySqlConfig.SectionName).Bind(mySqlOptions);
+            var contextOptions = new ContextOptions();
+            Configuration.GetSection(ConfigurationSections.Contexts).Bind(contextOptions);
 
-            services.AddMySqlPersistence(options =>
-            {
-                options.Server = mySqlOptions.Server;
-                options.Database = mySqlOptions.Database;
-                options.Username = mySqlOptions.Username;
-                options.Password = mySqlOptions.Password;
-                options.Version = mySqlOptions.Version;
-            });
+            services.ConfigureMySqlContext<ITicketContext, TicketContext>(contextOptions.TicketContext);
+            services.ConfigureMySqlContext<IUserContext, UserContext>(contextOptions.UserContext);
         }
     }
 }

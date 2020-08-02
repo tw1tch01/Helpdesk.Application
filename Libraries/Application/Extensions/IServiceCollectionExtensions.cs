@@ -1,5 +1,6 @@
-﻿using Helpdesk.Application.Tickets;
+﻿using System.Reflection;
 using Helpdesk.Services.Extensions;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Helpdesk.Application.Extensions
@@ -10,13 +11,7 @@ namespace Helpdesk.Application.Extensions
         {
             services.AddServices();
 
-            #region Application Services
-
-            services.AddTransient<TicketCommandService>();
-            services.AddTransient<TicketActionService>();
-            services.AddTransient<TicketQueryService>();
-
-            #endregion Application Services
+            services.AddMediatR(Assembly.GetExecutingAssembly());
 
             return services;
         }

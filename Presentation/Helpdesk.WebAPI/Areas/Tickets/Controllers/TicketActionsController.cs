@@ -1,22 +1,25 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
-using Helpdesk.Application.Tickets;
+using Helpdesk.Application.Tickets.Pings;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.WebAPI.Common;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
 {
     [Area(AreaNames.Tickets)]
     [ApiVersion(ApiConfig.CurrentVersion)]
+    [ApiExplorerSettings(GroupName = AreaNames.Tickets)]
     public class TicketActionsController : AbstractController
     {
-        private readonly TicketActionService _actionService;
+        private readonly IMediator _mediator;
 
-        public TicketActionsController(TicketActionService actionService)
+        public TicketActionsController(IMediator mediator)
         {
-            _actionService = actionService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(CloseTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CloseTicket([FromRoute] int ticketId)
         {
-            var result = await _actionService.CloseTicket(ticketId, 0);
+            var result = await _mediator.Send(new CloseTicketPing(ticketId, Guid.Empty));
 
             return result.Result switch
             {
@@ -58,7 +61,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(PauseTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> PauseTicket([FromRoute] int ticketId)
         {
-            var result = await _actionService.PauseTicket(ticketId, 0);
+            var result = await _mediator.Send(new PauseTicketPing(ticketId, Guid.Empty));
 
             return result.Result switch
             {
@@ -82,7 +85,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(ReopenTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ReopenTicket([FromRoute] int ticketId)
         {
-            var result = await _actionService.ReopenTicket(ticketId, 0);
+            var result = await _mediator.Send(new ReopenTicketPing(ticketId, Guid.Empty));
 
             return result.Result switch
             {
@@ -106,7 +109,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(ResolveTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ResolveTicket([FromRoute] int ticketId)
         {
-            var result = await _actionService.ResolveTicket(ticketId, 0);
+            var result = await _mediator.Send(new ResolveTicketPing(ticketId, Guid.Empty));
 
             return result.Result switch
             {
@@ -130,7 +133,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(StartTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> StartTicket([FromRoute] int ticketId)
         {
-            var result = await _actionService.StartTicket(ticketId, 0);
+            var result = await _mediator.Send(new StartTicketPing(ticketId, Guid.Empty));
 
             return result.Result switch
             {

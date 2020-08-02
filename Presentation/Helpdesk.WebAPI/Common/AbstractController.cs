@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +13,15 @@ namespace Helpdesk.WebAPI.Common
     public abstract class AbstractController : Controller
     {
         protected readonly int _defaultPageSize = 50;
+
+        protected static IList<T> DecodeParameterList<T>(string parameter)
+        {
+            if (string.IsNullOrWhiteSpace(parameter)) return new List<T>();
+
+            return parameter.Split(',')
+                            .Select(i => (T)Convert.ChangeType(i.Trim(), typeof(T)))
+                            .ToList();
+        }
 
         protected (int page, int pageSize) GetPagination()
         {

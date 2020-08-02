@@ -3,24 +3,26 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Data.Common;
-using Helpdesk.Application.Tickets;
-using Helpdesk.Domain.Enums;
+using Helpdesk.Application.Tickets.Pings;
+using Helpdesk.Domain.Tickets.Enums;
 using Helpdesk.DomainModels.Tickets;
 using Helpdesk.DomainModels.Tickets.Enums;
 using Helpdesk.WebAPI.Common;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
 {
     [Area(AreaNames.Tickets)]
     [ApiVersion(ApiConfig.CurrentVersion)]
+    [ApiExplorerSettings(GroupName = AreaNames.Tickets)]
     public class TicketQueriesController : AbstractController
     {
-        private readonly TicketQueryService _queryService;
+        private readonly IMediator _mediator;
 
-        public TicketQueriesController(TicketQueryService queryService)
+        public TicketQueriesController(IMediator mediator)
         {
-            _queryService = queryService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -33,11 +35,11 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         /// <returns>Action result</returns>
         /// <response code="200">Ticket details.</response>
         [HttpGet("{ticketId:int}")]
-        [ProducesResponseType(typeof(FullTicketDetails), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(TicketDetails), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetTicket([FromRoute] int ticketId)
         {
-            var details = await _queryService.GetTicketDetails(ticketId);
+            var details = await _mediator.Send(new GetTicketPing(ticketId));
 
             return details switch
             {
@@ -68,7 +70,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
             DateTimeOffset? createdAfter = null,
             DateTimeOffset? createdBefore = null,
             string searchyBy = null,
-            IList<int> ticketIds = null,
+            string ticketIds = null,
             TicketStatus? filterByStatus = null,
             Severity? filterBySeverity = null,
             Priority? filterByPriority = null,
@@ -79,14 +81,14 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
                 CreatedAfter = createdAfter,
                 CreatedBefore = createdBefore,
                 SearchBy = searchyBy,
-                TicketIds = ticketIds,
+                TicketIds = DecodeParameterList<int>(ticketIds),
                 FilterByStatus = filterByStatus,
                 FilterBySeverity = filterBySeverity,
                 FilterByPriority = filterByPriority,
                 SortBy = sortBy
             };
 
-            return Ok(await _queryService.LookupTickets(@params));
+            return Ok(await _mediator.Send(new LookupTicketsPing(@params)));
         }
 
         /// <summary>
@@ -111,7 +113,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
             DateTimeOffset? createdAfter = null,
             DateTimeOffset? createdBefore = null,
             string searchyBy = null,
-            IList<int> ticketIds = null,
+            string ticketIds = null,
             TicketStatus? filterByStatus = null,
             Severity? filterBySeverity = null,
             Priority? filterByPriority = null,
@@ -124,14 +126,14 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
                 CreatedAfter = createdAfter,
                 CreatedBefore = createdBefore,
                 SearchBy = searchyBy,
-                TicketIds = ticketIds,
+                TicketIds = DecodeParameterList<int>(ticketIds),
                 FilterByStatus = filterByStatus,
                 FilterBySeverity = filterBySeverity,
                 FilterByPriority = filterByPriority,
                 SortBy = sortBy
             };
 
-            return Ok(await _queryService.PagedTicketLookup(page, pageSize, @params));
+            return Ok(await _mediator.Send(new PagedTicketsPing(page, pageSize, @params)));
         }
     }
 }

@@ -9,7 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Helpdesk.Services" Version="1.0.4" />
+    <PackageReference Include="Helpdesk.Services" Version="1.2.2" />
+    <PackageReference Include="MediatR" Version="8.1.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

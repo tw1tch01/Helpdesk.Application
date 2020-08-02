@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Helpdesk.WebAPI.Handlers
 {
-    public class ExceptionHandler
+    public static class ExceptionHandler
     {
         public static async Task Handle(HttpContext context)
         {
