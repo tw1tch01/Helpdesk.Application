@@ -43,10 +43,6 @@ For none paged requests, use the defined `{resource}/all` endpoint.
 
 This API features Cross-Origin Resource Sharing (CORS) implemented in compliance with W3C spec. And that allows cross-domain communication from the browser. All responses have a wildcard same-origin which makes them completely public and accessible to everyone, including any code on any site.
 
-## Authentication
-
-There is currently no authentication setup for this implementation of the `Helpdesk.Core` system. Will be implemented when Clients/Users are setup.
-
 ## API Versioning
 
 This API supports API versioning via request headers.

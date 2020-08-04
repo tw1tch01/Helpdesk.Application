@@ -1,36 +1,14 @@
 ﻿using System;
 using Data.Contexts;
-using Helpdesk.Persistence.Options;
+using Helpdesk.Common.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Helpdesk.Persistence.Extensions
 {
-    public static class IServiceCollectionExtensions
+    public static class DependecyInjection
     {
-        //public static IServiceCollection AddTicketContext(this IServiceCollection services, Action<MySqlOptions> mySqlOptions)
-        //{
-        //    var options = new MySqlOptions();
-        //    mySqlOptions(options);
-
-        //    services.AddTransient<ITicketContext, TicketContext>();
-        //    services.ConfigureMySqlContext<TicketContext>(options);
-
-        //    return services;
-        //}
-
-        //public static IServiceCollection AddUserContext(this IServiceCollection services, Action<MySqlOptions> mySqlOptions)
-        //{
-        //    var options = new MySqlOptions();
-        //    mySqlOptions(options);
-
-        //    services.AddTransient<IUserContext, UserContext>();
-        //    services.ConfigureMySqlContext<UserContext>(options);
-
-        //    return services;
-        //}
-
         public static IServiceCollection ConfigureMySqlContext<IContext, TContext>
         (
             this IServiceCollection services,

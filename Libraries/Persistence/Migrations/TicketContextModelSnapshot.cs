@@ -3,16 +3,14 @@ using System;
 using Helpdesk.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Helpdesk.Persistence.Migrations.Tickets
+namespace Helpdesk.Persistence.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20200802153838_RemovedUniqueIndexOnTicketName")]
-    partial class RemovedUniqueIndexOnTicketName
+    partial class TicketContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

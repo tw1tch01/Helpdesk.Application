@@ -4,16 +4,18 @@ using System.Reflection;
 using System.Text.Json.Serialization;
 using Data.Common;
 using Helpdesk.Application.Extensions;
+using Helpdesk.Common.Configurations;
+using Helpdesk.Common.Interfaces;
+using Helpdesk.Infrastructure.Extensions;
 using Helpdesk.Persistence.Actions;
-using Helpdesk.Persistence.Common.Options;
 using Helpdesk.Persistence.Contexts;
 using Helpdesk.Persistence.Extensions;
-using Helpdesk.Persistence.Options;
 using Helpdesk.Services.Common.Contexts;
 using Helpdesk.WebAPI.Common;
 using Helpdesk.WebAPI.Docs;
 using Helpdesk.WebAPI.Extensions;
 using Helpdesk.WebAPI.Handlers;
+using Helpdesk.WebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -42,6 +44,9 @@ namespace Helpdesk.WebAPI
         {
             AddDataService(services);
             services.AddApplication();
+            services.AddInfrastructure(Configuration);
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
             services.AddControllers();
 
             services.AddMvc()
@@ -109,6 +114,17 @@ namespace Helpdesk.WebAPI
                     throw new InvalidOperationException("Unable to determine tag for endpoint.");
                 });
                 options.DocInclusionPredicate((name, api) => true);
+
+
+                options.AddSecurityDefinition("JWT", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                //options.operat.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
 
             #endregion Swagger
@@ -141,6 +157,8 @@ namespace Helpdesk.WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseCors(ApiConfig.CorsPolicy);
@@ -151,15 +169,14 @@ namespace Helpdesk.WebAPI
             });
         }
 
-        private static string GetUser(HttpContext httpContext)
-        {
-            return httpContext?.User?.Identity?.Name ?? "system";
-        }
+        //private static string GetUser(HttpContext httpContext)
+        //{
+        //    return httpContext?.User?.Identity?.Name ?? "system";
+        //}
 
         private static string GetPath(HttpContext httpContext)
         {
             var request = httpContext?.Request;
-
             return request == null ? "/no-context" : $"{request.Path} [{request.Method}]";
         }
 
@@ -168,9 +185,10 @@ namespace Helpdesk.WebAPI
             services.AddScoped(provider =>
             {
                 var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                var currentUserService = provider.GetService<ICurrentUserService>();
                 return new AddedStateAction
                 {
-                    CreatedBy = GetUser(httpContext),
+                    CreatedBy = currentUserService.UserGuid.ToString(),
                     CreatedProcess = GetPath(httpContext)
                 };
             });
@@ -178,9 +196,11 @@ namespace Helpdesk.WebAPI
             services.AddScoped(provider =>
             {
                 var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
+                var currentUserService = provider.GetService<ICurrentUserService>();
+
                 return new ModifiedStateAction
                 {
-                    ModifiedBy = GetUser(httpContext),
+                    ModifiedBy = currentUserService.UserGuid.ToString(),
                     ModifiedProcess = GetPath(httpContext)
                 };
             });
@@ -199,7 +219,6 @@ namespace Helpdesk.WebAPI
             Configuration.GetSection(ConfigurationSections.Contexts).Bind(contextOptions);
 
             services.ConfigureMySqlContext<ITicketContext, TicketContext>(contextOptions.TicketContext);
-            services.ConfigureMySqlContext<IUserContext, UserContext>(contextOptions.UserContext);
         }
     }
 }

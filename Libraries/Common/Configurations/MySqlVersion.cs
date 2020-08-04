@@ -1,4 +1,4 @@
-﻿namespace Helpdesk.Persistence.Options
+﻿namespace Helpdesk.Common.Configurations
 {
     public class MySqlVersion
     {

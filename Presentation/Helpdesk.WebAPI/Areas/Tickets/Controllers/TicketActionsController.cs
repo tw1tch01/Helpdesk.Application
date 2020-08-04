@@ -37,7 +37,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [ProducesResponseType(typeof(CloseTicketResult), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> CloseTicket([FromRoute] int ticketId)
         {
-            var result = await _mediator.Send(new CloseTicketPing(ticketId, Guid.Empty));
+            var result = await _mediator.Send(new CloseTicketPing(ticketId));
 
             return result.Result switch
             {

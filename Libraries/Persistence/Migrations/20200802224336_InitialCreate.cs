@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Helpdesk.Persistence.Migrations.Tickets
+namespace Helpdesk.Persistence.Migrations
 {
     public partial class InitialCreate : Migration
     {
@@ -75,12 +75,6 @@ namespace Helpdesk.Persistence.Migrations.Tickets
                 name: "IX_TicketLinks_ToTicketId",
                 table: "TicketLinks",
                 column: "ToTicketId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tickets_Name",
-                table: "Tickets",
-                column: "Name",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

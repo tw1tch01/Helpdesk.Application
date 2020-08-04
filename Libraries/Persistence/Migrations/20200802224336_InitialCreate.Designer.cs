@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Helpdesk.Persistence.Migrations.Tickets
+namespace Helpdesk.Persistence.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    [Migration("20200802092930_InitialCreate")]
+    [Migration("20200802224336_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,9 +106,6 @@ namespace Helpdesk.Persistence.Migrations.Tickets
                         .HasColumnType("char(36)");
 
                     b.HasKey("TicketId");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Tickets");
                 });

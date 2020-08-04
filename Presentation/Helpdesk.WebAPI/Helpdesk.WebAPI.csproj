@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Application\Application.csproj" />
+    <ProjectReference Include="..\..\Libraries\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\..\Libraries\Persistence\Persistence.csproj" />
   </ItemGroup>
 

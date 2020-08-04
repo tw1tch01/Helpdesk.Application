@@ -1,4 +1,4 @@
-﻿namespace Helpdesk.Persistence.Common.Options
+﻿namespace Helpdesk.Common.Configurations
 {
     public static class ConfigurationSections
     {
