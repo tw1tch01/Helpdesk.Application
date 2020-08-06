@@ -1,4 +1,6 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
+using Helpdesk.Application.Authentication.Pings;
 using Helpdesk.WebAPI.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,15 +34,10 @@ namespace Helpdesk.WebAPI.Areas.Authentication.Controllers
         [HttpPost("generate")]
         //[ProducesResponseType(typeof(CloseTicketResult), (int)HttpStatusCode.OK)]
         //[ProducesResponseType(typeof(CloseTicketResult), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> CloseTicket()
+        public async Task<IActionResult> Generate()
         {
             var result = await _mediator.Send(new AuthenticatePing());
-
-            return result.Result switch
-            {
-                TicketCloseResult.Closed => Ok(result),
-                _ => BadRequest(result)
-            };
+            return Ok(result);
         }
     }
 }

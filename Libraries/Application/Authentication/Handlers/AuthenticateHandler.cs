@@ -4,13 +4,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Helpdesk.Application.Authentication.Pings;
+using Helpdesk.Common.Interfaces;
 using MediatR;
 
 namespace Helpdesk.Application.Authentication.Handlers
 {
     public class AuthenticateHandler : IRequestHandler<AuthenticatePing>
     {
-        public AuthenticateHandler(UserManager)
+        public AuthenticateHandler(IIdentityService identityService)
         {
 
         }

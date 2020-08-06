@@ -4,6 +4,17 @@
         <name>Helpdesk.WebAPI</name>
     </assembly>
     <members>
+        <member name="M:Helpdesk.WebAPI.Areas.Authentication.Controllers.TokenController.Generate">
+            <summary>
+            Generate a JWT token
+            </summary>
+            <remarks>
+            Genereates an autherized JWT token
+            </remarks>
+            <returns>Action result</returns>
+            <response code="200"></response>
+            <response code="400">Request was not valid.</response>
+        </member>
         <member name="M:Helpdesk.WebAPI.Areas.TicketLinks.Controllers.TicketLinksController.LinkTicket(Helpdesk.DomainModels.TicketLinks.LinkTicket)">
             <summary>
             Link tickets
