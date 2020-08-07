@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Helpdesk.Application.TicketLinks.Pings;
 using Helpdesk.Application.Tickets.Pings;
+using Helpdesk.DomainModels.TicketLinks;
+using Helpdesk.Services.TicketLinks.Results;
+using Helpdesk.Services.TicketLinks.Results.Enums;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.WebAPI.Common;
+using Helpdesk.WebAPI.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -138,6 +143,52 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
             return result.Result switch
             {
                 TicketStartResult.Started => Ok(result),
+                _ => BadRequest(result)
+            };
+        }
+
+        /// <summary>
+        /// Link tickets
+        /// </summary>
+        /// <remarks>
+        /// Link a ticket to another ticket
+        /// </remarks>
+        /// <returns>Action result</returns>
+        /// <response code="200">Tickets were succesfully linked.</response>
+        /// <response code="400">Request was not valid.</response>
+        [HttpPost("link")]
+        [ProducesResponseType(typeof(LinkTicketsResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(LinkTicketsResult), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> LinkTicket([FromBody] LinkTicket linkTickets)
+        {
+            var result = await _mediator.Send(new LinkTicketsPing(linkTickets));
+
+            return result.Result switch
+            {
+                TicketsLinkResult.Linked => Ok(result),
+                _ => BadRequest(result)
+            };
+        }
+
+        /// <summary>
+        /// Unlink tickets
+        /// </summary>
+        /// <remarks>
+        /// Unlink a ticket from another ticket
+        /// </remarks>
+        /// <returns>Action result</returns>
+        /// <response code="200">Tickets were succesfully unlinked.</response>
+        /// <response code="400">Request was not valid.</response>
+        [HttpPost("unlink")]
+        [ProducesResponseType(typeof(UnlinkTicketsResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(UnlinkTicketsResult), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> UnlinkTicket([FromBody] UnlinkTicket unlinkTickets)
+        {
+            var result = await _mediator.Send(new UnlinkTicketsPing(unlinkTickets));
+
+            return result.Result switch
+            {
+                TicketsUnlinkResult.Unlinked => Ok(result),
                 _ => BadRequest(result)
             };
         }

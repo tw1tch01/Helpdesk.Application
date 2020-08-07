@@ -6,6 +6,7 @@ using Helpdesk.DomainModels.Tickets;
 using Helpdesk.Services.Tickets.Results;
 using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.WebAPI.Common;
+using Helpdesk.WebAPI.Configuration;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
