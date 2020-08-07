@@ -2,15 +2,10 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using Data.Common;
 using Helpdesk.Application.Extensions;
 using Helpdesk.Persistence.Actions;
-using Helpdesk.Persistence.Common.Options;
-using Helpdesk.Persistence.Contexts;
 using Helpdesk.Persistence.Extensions;
-using Helpdesk.Persistence.Options;
-using Helpdesk.Services.Common.Contexts;
-using Helpdesk.WebAPI.Common;
+using Helpdesk.WebAPI.Configuration;
 using Helpdesk.WebAPI.Docs;
 using Helpdesk.WebAPI.Extensions;
 using Helpdesk.WebAPI.Handlers;
@@ -20,10 +15,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Helpdesk.WebAPI
@@ -40,7 +36,10 @@ namespace Helpdesk.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            AddDataService(services);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IConfigureOptions<AddedStateAction>, AddedStateConfiguration>();
+            services.AddScoped<IConfigureOptions<ModifiedStateAction>, ModifiedStateConfiguration>();
+            services.AddDataServices(Configuration);
             services.AddApplication();
             services.AddControllers();
 
@@ -64,15 +63,10 @@ namespace Helpdesk.WebAPI
                 options.AddPolicy(ApiConfig.CorsPolicy, policy =>
                 {
                     policy.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
                 });
             });
-
-            // Context accessor
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            #region Swagger
 
             services.AddSwaggerGen(options =>
             {
@@ -111,7 +105,27 @@ namespace Helpdesk.WebAPI
                 options.DocInclusionPredicate((name, api) => true);
             });
 
-            #endregion Swagger
+            var accessControl = new AccessControl();
+            Configuration.GetSection(AccessControl.ConfigurationSectionName).Bind(accessControl);
+            services.AddAuthentication("Bearer")
+                    .AddJwtBearer("Bearer", options =>
+                    {
+                        options.Authority = accessControl.Url;
+
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateAudience = false
+                        };
+                    });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(ApiConfig.ScopePolicy, policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", accessControl.Scope);
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,70 +150,21 @@ namespace Helpdesk.WebAPI
                 options.RoutePrefix = "docs";
                 options.SpecUrl = $"/swagger/v{ApiConfig.CurrentVersion}/swagger.json";
                 options.DocumentTitle = "Helpdesk Application API";
-                options.ExpandResponses(string.Empty);
+                options.ExpandResponses("200,201");
             });
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors(ApiConfig.CorsPolicy);
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers()
+                    .RequireAuthorization(ApiConfig.ScopePolicy);
             });
-        }
-
-        private static string GetUser(HttpContext httpContext)
-        {
-            return httpContext?.User?.Identity?.Name ?? "system";
-        }
-
-        private static string GetPath(HttpContext httpContext)
-        {
-            var request = httpContext?.Request;
-
-            return request == null ? "/no-context" : $"{request.Path} [{request.Method}]";
-        }
-
-        private void AddDataService(IServiceCollection services)
-        {
-            services.AddScoped(provider =>
-            {
-                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
-                return new AddedStateAction
-                {
-                    CreatedBy = GetUser(httpContext),
-                    CreatedProcess = GetPath(httpContext)
-                };
-            });
-
-            services.AddScoped(provider =>
-            {
-                var httpContext = provider.GetService<IHttpContextAccessor>()?.HttpContext;
-                return new ModifiedStateAction
-                {
-                    ModifiedBy = GetUser(httpContext),
-                    ModifiedProcess = GetPath(httpContext)
-                };
-            });
-
-            services.AddScoped(provider =>
-            {
-                var addedContext = provider.GetService<AddedStateAction>();
-                var modifiedContext = provider.GetService<ModifiedStateAction>();
-                var contextScope = new ContextScope();
-                contextScope.StateActions[EntityState.Added] = addedContext.SetCreatedAuditFields;
-                contextScope.StateActions[EntityState.Modified] = modifiedContext.SetModifiedAuditFields;
-                return contextScope;
-            });
-
-            var contextOptions = new ContextOptions();
-            Configuration.GetSection(ConfigurationSections.Contexts).Bind(contextOptions);
-
-            services.ConfigureMySqlContext<ITicketContext, TicketContext>(contextOptions.TicketContext);
-            services.ConfigureMySqlContext<IUserContext, UserContext>(contextOptions.UserContext);
         }
     }
 }
