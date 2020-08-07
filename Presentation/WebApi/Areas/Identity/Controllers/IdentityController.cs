@@ -3,7 +3,7 @@ using Helpdesk.WebAPI.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Helpdesk.WebAPI.Areas.Identity
+namespace Helpdesk.WebAPI.Areas.Identity.Controllers
 {
     [ApiVersion(ApiConfig.CurrentVersion)]
     [Authorize]

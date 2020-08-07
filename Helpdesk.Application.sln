@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpdesk.WebAPI", "Presentation\Helpdesk.WebAPI\Helpdesk.WebAPI.csproj", "{CE5672B1-8590-4DA0-99A8-991A7A3E81BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "Presentation\WebApi\WebApi.csproj", "{CE5672B1-8590-4DA0-99A8-991A7A3E81BD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{DFCE8AA7-664C-484D-811B-A306A4E68392}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Libraries\Pe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Libraries\Application\Application.csproj", "{76FD3F8A-13DD-4968-93E1-D25C581870F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helpdesk.Client", "presentation\helpdesk.client\Helpdesk.Client.csproj", "{B963F9BA-B37E-426E-9F98-CDE2DDFAC2E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityClient", "Presentation\IdentityClient\IdentityClient.csproj", "{B963F9BA-B37E-426E-9F98-CDE2DDFAC2E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Helpdesk.WebAPI</name>
+        <name>WebApi</name>
     </assembly>
     <members>
         <member name="M:Helpdesk.WebAPI.Areas.Tickets.Controllers.TicketActionsController.CloseTicket(System.Int32)">
