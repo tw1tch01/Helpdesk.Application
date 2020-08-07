@@ -8,6 +8,7 @@ namespace Helpdesk.WebAPI.Areas.Identity.Controllers
     [ApiVersion(ApiConfig.CurrentVersion)]
     [Authorize]
     [Route("identity")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class IdentityController : Controller
     {
         [HttpGet("")]

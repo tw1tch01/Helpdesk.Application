@@ -12,6 +12,8 @@ namespace Helpdesk.WebAPI.Common
     [Authorize]
     [Route("api/[area]")]
     [Produces("application/json")]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
+    [ProducesResponseType((int)HttpStatusCode.Forbidden)]
     [ProducesResponseType(typeof(ApiErrorResponse), (int)HttpStatusCode.InternalServerError)]
     public abstract class AbstractController : Controller
     {
