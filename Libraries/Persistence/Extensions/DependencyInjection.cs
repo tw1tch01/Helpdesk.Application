@@ -14,7 +14,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace Helpdesk.Persistence.Extensions
 {
-    public static class IServiceCollectionExtensions
+    public static class DependencyInjection
     {
         public static IServiceCollection AddDataServices(
             this IServiceCollection services,
@@ -40,7 +40,6 @@ namespace Helpdesk.Persistence.Extensions
             configuration.GetSection(ConfigurationSections.Contexts).Bind(contextOptions);
 
             services.ConfigureMySqlContext<ITicketContext, TicketContext>(contextOptions.TicketContext);
-            services.ConfigureMySqlContext<IUserContext, UserContext>(contextOptions.UserContext);
 
             return services;
         }
