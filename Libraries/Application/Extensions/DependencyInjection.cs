@@ -12,6 +12,7 @@ namespace Helpdesk.Application.Extensions
             services.AddServices();
 
             services.AddMediatR(typeof(DependencyInjection).Assembly);
+
             return services;
         }
     }
