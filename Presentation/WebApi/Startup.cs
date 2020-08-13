@@ -10,6 +10,7 @@ using Helpdesk.WebAPI.Configuration;
 using Helpdesk.WebAPI.Docs;
 using Helpdesk.WebAPI.Extensions;
 using Helpdesk.WebAPI.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using WebApi.Authorization;
+using WebApi.Authorization.Handlers;
+using WebApi.Authorization.Requirements;
 
 namespace Helpdesk.WebAPI
 {
@@ -96,7 +100,8 @@ namespace Helpdesk.WebAPI
                             TokenUrl = new Uri("https://localhost:5001/connect/token"),
                             Scopes = new Dictionary<string, string>
                             {
-                                { "helpdesk", "Demo API - full access" }
+                                { "helpdesk.demo", "Demo API - full access" },
+                                { "helpdesk.api", "API scope" }
                             }
                         }
                     }
@@ -128,20 +133,23 @@ namespace Helpdesk.WebAPI
                     .AddJwtBearer("Bearer", options =>
                     {
                         options.Authority = accessControl.Url;
-
+                        options.Audience = "helpdesk.api";
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateAudience = false
                         };
                     });
 
+            services.AddSingleton<IAuthorizationHandler, HasActionScopeHandler>();
+            services.AddSingleton<IAuthorizationHandler, HasFullScopeHandler>();
+            services.AddSingleton<IAuthorizationHandler, HasManageScopeHandler>();
+            services.AddSingleton<IAuthorizationHandler, HasReadScopeHandler>();
+
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(ApiConfig.ScopePolicy, policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", accessControl.Scope);
-                });
+                options.AddPolicy(PolicyNames.Actions, policy => policy.RequireAuthenticatedUser().AddRequirements(new ActionRequirement()));
+                options.AddPolicy(PolicyNames.Management, policy => policy.RequireAuthenticatedUser().AddRequirements(new ManageRequirement()));
+                options.AddPolicy(PolicyNames.Queries, policy => policy.RequireAuthenticatedUser().AddRequirements(new QueryRequirement()));
             });
         }
 
@@ -179,8 +187,7 @@ namespace Helpdesk.WebAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers()
-                    .RequireAuthorization(ApiConfig.ScopePolicy);
+                endpoints.MapControllers();
             });
         }
     }

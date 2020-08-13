@@ -11,13 +11,16 @@ using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.WebAPI.Common;
 using Helpdesk.WebAPI.Configuration;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Authorization;
 
 namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
 {
     [Area(AreaNames.Tickets)]
     [ApiVersion(ApiConfig.CurrentVersion)]
     [ApiExplorerSettings(GroupName = AreaNames.Tickets)]
+    [Authorize(PolicyNames.Actions)]
     public class TicketActionsController : AbstractController
     {
         private readonly IMediator _mediator;

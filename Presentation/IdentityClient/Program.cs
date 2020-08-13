@@ -25,8 +25,8 @@ namespace Helpdesk.Client
             {
                 Address = disco.TokenEndpoint,
                 ClientId = "helpdesk",
-                ClientSecret = "secret",
-                Scope = "helpdesk"
+                ClientSecret = "secret1",
+                Scope = "helpdesk.read",
             });
 
             if (tokenResponse.IsError)
@@ -36,7 +36,7 @@ namespace Helpdesk.Client
             }
 
             Console.WriteLine(tokenResponse.Json);
-            Console.WriteLine("\n\n");
+            Console.WriteLine("\n");
 
             // call api
             var apiClient = new HttpClient();

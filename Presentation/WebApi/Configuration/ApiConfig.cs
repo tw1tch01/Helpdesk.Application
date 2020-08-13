@@ -11,7 +11,5 @@
         public const string CorsPolicy = "default";
 
         public const string CurrentVersion = "1.0";
-
-        public const string ScopePolicy = "helpdesk-scope";
     }
 }

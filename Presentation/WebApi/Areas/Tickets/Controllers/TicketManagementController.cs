@@ -8,13 +8,16 @@ using Helpdesk.Services.Tickets.Results.Enums;
 using Helpdesk.WebAPI.Common;
 using Helpdesk.WebAPI.Configuration;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Authorization;
 
 namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
 {
     [Area(AreaNames.Tickets)]
     [ApiVersion(ApiConfig.CurrentVersion)]
     [ApiExplorerSettings(GroupName = AreaNames.Tickets)]
+    [Authorize(PolicyNames.Management)]
     public class TicketManagementController : AbstractController
     {
         private readonly IMediator _mediator;
@@ -61,7 +64,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [HttpDelete("delete/{ticketId:int}")]
         [ProducesResponseType(typeof(DeleteTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(DeleteTicketResult), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteTicket([FromRoute]int ticketId)
+        public async Task<IActionResult> DeleteTicket([FromRoute] int ticketId)
         {
             var result = await _mediator.Send(new DeleteTicketPing(ticketId, Guid.Empty));
 
@@ -86,7 +89,7 @@ namespace Helpdesk.WebAPI.Areas.Tickets.Controllers
         [HttpPatch("update/{ticketId:int}")]
         [ProducesResponseType(typeof(UpdateTicketResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(UpdateTicketResult), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> UpdateTicket([FromRoute]int ticketId, [FromBody] EditTicket updateTicket)
+        public async Task<IActionResult> UpdateTicket([FromRoute] int ticketId, [FromBody] EditTicket updateTicket)
         {
             var result = await _mediator.Send(new UpdateTicketPing(ticketId, updateTicket));
 
