@@ -1,0 +1,16 @@
+{
+  "name": "helpdesk",
+  "version": "1.0.0",
+  "description": "Typescript library for easy integration with the Helpdesk API.",
+  "main": "index.js",
+  "type": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robert Breedt",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "jest": "^26.4.0"
+  }
+}
