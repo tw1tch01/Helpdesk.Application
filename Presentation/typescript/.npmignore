@@ -1,2 +1,5 @@
-tsconfig.json
 src
+tsconfig.json
+tslint.json
+.prettierrc
+jest.config.json

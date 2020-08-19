@@ -1,0 +1,5 @@
+{
+    "baseUrl": "https://localhost:6001/api",
+    "version": "1.0.0",
+    "authorityUrl": "https://localhost:5001/"
+}

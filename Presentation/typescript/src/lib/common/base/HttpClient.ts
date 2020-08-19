@@ -1,6 +1,6 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-export default abstract class HttpClient {
+export abstract class HttpClient {
   protected readonly _axios: AxiosInstance;
 
   public constructor(baseUrl: string) {
@@ -8,10 +8,7 @@ export default abstract class HttpClient {
       baseURL: baseUrl,
     });
 
-    this._axios.interceptors.response.use(
-      this._handleResponse,
-      this._handleError
-    );
+    this._axios.interceptors.response.use(this._handleResponse, this._handleError);
   }
 
   public setHeader(name: string, value: string) {
